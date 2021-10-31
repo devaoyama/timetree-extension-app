@@ -1,30 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Box, Flex, Heading, Stack } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
+import {
+  accessTokenActions,
+  accessTokenSelectors,
+} from "../states/accessToken";
 
 const Home: NextPage = () => {
-  const [accessToken, setAccessToken] = useState<string | undefined>();
   const router = useRouter();
+  const accessToken = accessTokenSelectors.useAccessToken();
+  const requestAccessToken = accessTokenActions.useRequestAccessToken();
 
   useEffect(() => {
-    if (!router.query.code || accessToken !== undefined) return;
-
-    fetch("/api/get_token", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ code: router.query.code }),
-    })
-      .then(async (response) => {
-        const data = await response.json();
-        setAccessToken(data.accessToken || "");
-      })
-      .catch(() => {
-        setAccessToken("");
-      });
-  }, [accessToken, router.query.code]);
+    if (!router.query.code) return;
+    requestAccessToken(router.query.code as string);
+  }, [requestAccessToken, router.query.code]);
 
   return (
     <Flex
@@ -45,6 +36,7 @@ const Home: NextPage = () => {
         <Heading color="teal.400">Welcome</Heading>
       </Stack>
       <Box>アクセストークンゲット</Box>
+      <Box>{accessToken}</Box>
     </Flex>
   );
 };
