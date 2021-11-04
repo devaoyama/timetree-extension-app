@@ -4,9 +4,12 @@ import { RecoilAtomKeys } from "./keys";
 
 type AccessTokenState = string | null | undefined;
 
-const accessTokenState = atom<AccessTokenState>({
+export const accessTokenState = atom<AccessTokenState>({
   key: RecoilAtomKeys.ACCESS_TOKEN_STATE,
-  default: undefined,
+  default:
+    process.env.NODE_ENV === "production"
+      ? undefined
+      : process.env.NEXT_PUBLIC_TIMETREE_ACCESS_TOKEN,
 });
 
 type AccessTokenActions = {
