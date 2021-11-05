@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { accessTokenSelectors } from "../../states/accessToken";
-import { Loading } from "../loading/loading";
+import { Loading } from "../loading/Loading";
 
 type Props = {
   children?: React.ReactNode;

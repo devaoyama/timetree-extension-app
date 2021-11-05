@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { accessTokenActions } from "../states/accessToken";
-import { Loading } from "../components/loading/loading";
+import { Loading } from "../components/loading/Loading";
 
 const Redirect: NextPage = () => {
   const router = useRouter();
