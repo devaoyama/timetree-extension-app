@@ -4,4 +4,6 @@ export enum RecoilAtomKeys {
 
 export enum RecoilSelectorKeys {
   USER_QUERY = "userQuery",
+  CALENDARS_QUERY = "calendarsQuery",
+  LABELS_QUERY = "labelsQuery",
 }
