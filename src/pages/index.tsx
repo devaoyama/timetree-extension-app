@@ -1,45 +1,31 @@
-import React, { useEffect } from "react";
-import { Box, Flex, Heading, Stack } from "@chakra-ui/react";
+import React from "react";
+import Link from "next/link";
+import { Box, Button, Container } from "@chakra-ui/react";
+import { AddIcon } from "@chakra-ui/icons";
 import type { NextPage } from "next";
-import { useRouter } from "next/router";
-import {
-  accessTokenActions,
-  accessTokenSelectors,
-} from "../states/accessToken";
 import { RequiredLogin } from "../components/common/RequiredLogin";
+import { userSelectors } from "../states/user";
+import { Header } from "../components/common/Header";
 
 const Home: NextPage = () => {
-  const router = useRouter();
-  const accessToken = accessTokenSelectors.useAccessToken();
-  const requestAccessToken = accessTokenActions.useRequestAccessToken();
-
-  useEffect(() => {
-    if (!router.query.code) return;
-    requestAccessToken(router.query.code as string);
-  }, [requestAccessToken, router.query.code]);
+  const { data } = userSelectors.useUser();
 
   return (
     <RequiredLogin>
-      <Flex
-        flexDirection="column"
-        width="100wh"
-        height="100vh"
-        backgroundColor="gray.200"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Stack
-          flexDir="column"
-          mb="3"
-          justifyContent="center"
-          alignItems="center"
-          width="full"
-        >
-          <Heading color="teal.400">Welcome</Heading>
-        </Stack>
-        <Box>ログイン中</Box>
-        <Box>{accessToken}</Box>
-      </Flex>
+      <Header name={data?.name} imageUrl={data?.imageUrl} />
+      <Box h="10vh" />
+      <Container mt={5}>
+        <Link href="/events/create" passHref>
+          <Button
+            colorScheme="green"
+            leftIcon={<AddIcon w={6} h={6} />}
+            width="100%"
+            height="20"
+          >
+            予定を作成する
+          </Button>
+        </Link>
+      </Container>
     </RequiredLogin>
   );
 };
