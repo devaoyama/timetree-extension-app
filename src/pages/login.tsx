@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Button, Flex, Heading, Stack } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { RequiredNotLogin } from "../components/common/RequiredNotLogin";
+import { RequiredNotLogin } from "../components/RequiredNotLogin";
 
 const Login: NextPage = () => {
   const router = useRouter();

@@ -13,8 +13,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { ChevronLeftIcon, RepeatClockIcon } from "@chakra-ui/icons";
-import { Header } from "../../components/common/Header";
-import { RequiredLogin } from "../../components/common/RequiredLogin";
+import { Header } from "../../components/Header";
+import { RequiredLogin } from "../../components/RequiredLogin";
 import { userSelectors } from "../../states/user";
 import { CalendarCheckBox } from "../../components/CalendarCheckBox";
 
