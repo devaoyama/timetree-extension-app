@@ -4,7 +4,7 @@ import { RecoilSelectorKeys } from "./keys";
 import { accessTokenState } from "./accessToken";
 
 const labelsQuery = selectorFamily<readonly Label[] | undefined, string>({
-  key: RecoilSelectorKeys.CALENDARS_QUERY,
+  key: RecoilSelectorKeys.LABELS_QUERY,
   get:
     (calendarId) =>
     async ({ get }) => {
@@ -15,8 +15,8 @@ const labelsQuery = selectorFamily<readonly Label[] | undefined, string>({
     },
 });
 
-export const calendarSelectors = {
-  useCalendars: (
+export const labelSelectors = {
+  useLabels: (
     calendarId: string
   ): {
     data?: readonly Label[];
