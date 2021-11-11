@@ -1,28 +1,29 @@
-import React from "react";
-import {
-  Checkbox,
-  CheckboxGroup,
-  FormControl,
-  FormLabel,
-  Stack,
-} from "@chakra-ui/react";
+import React, { ChangeEvent } from "react";
+import { Checkbox, FormControl, FormLabel, Stack } from "@chakra-ui/react";
 import { calendarSelectors } from "../states/calendars";
+import { Calendar } from "@timetreeapp/web-api";
 
-export const CalendarCheckBox = () => {
+type Props = {
+  onChange: (e: ChangeEvent<HTMLInputElement>, calendar: Calendar) => void;
+};
+
+export const CalendarCheckBox: React.FC<Props> = ({ onChange }) => {
   const { data } = calendarSelectors.useCalendars();
 
   return (
     <FormControl>
-      <CheckboxGroup>
-        <FormLabel>カレンダー</FormLabel>
-        <Stack spacing={10} direction="row">
-          {data?.map((calendar) => (
-            <Checkbox key={calendar.id} colorScheme="green">
-              {calendar.name}
-            </Checkbox>
-          ))}
-        </Stack>
-      </CheckboxGroup>
+      <FormLabel>カレンダー</FormLabel>
+      <Stack spacing={10} direction="row">
+        {data?.map((calendar) => (
+          <Checkbox
+            key={calendar.id}
+            colorScheme="green"
+            onChange={(e) => onChange(e, calendar)}
+          >
+            {calendar.name}
+          </Checkbox>
+        ))}
+      </Stack>
     </FormControl>
   );
 };
