@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import {
   Box,
@@ -13,13 +13,43 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { ChevronLeftIcon, RepeatClockIcon } from "@chakra-ui/icons";
+import dayjs from "dayjs";
 import { Header } from "../../components/Header";
 import { RequiredLogin } from "../../components/RequiredLogin";
 import { userSelectors } from "../../states/user";
 import { CalendarCheckBox } from "../../components/CalendarCheckBox";
+import { CalendarLabelSelect } from "../../components/CalendarLabelSelect";
+import { useEvents } from "../../hooks/useEvents";
+
+const now = dayjs();
+const nowAfterHour = now.add(1, "hour");
 
 const EventCreate = () => {
+  const [title, setTitle] = useState("");
+  const [allDay, setAllDay] = useState(false);
+  const [startAtDate, setStartAtDate] = useState(now.format("YYYY-MM-DD"));
+  const [startAtTime, setStartAtTime] = useState(now.format("HH:00"));
+  const [endAtDate, setEndAtDate] = useState(nowAfterHour.format("YYYY-MM-DD"));
+  const [endAtTime, setEndAtTime] = useState(nowAfterHour.format("HH:00"));
+  const [calendars, setCalendars] = useState<
+    { id: string; name: string; labelId?: string }[]
+  >([]);
+
   const { data } = userSelectors.useUser();
+  const { add } = useEvents();
+
+  const onClick = async () => {
+    await add({
+      userIds: data ? [data.id] : [],
+      title,
+      allDay,
+      startAtDate,
+      startAtTime,
+      endAtDate,
+      endAtTime,
+      calendars,
+    });
+  };
 
   return (
     <RequiredLogin>
@@ -45,30 +75,90 @@ const EventCreate = () => {
             variant="flushed"
             placeholder="タイトル"
             focusBorderColor="green.300"
+            onChange={(e) => setTitle(e.target.value)}
           />
           <Flex justifyContent="space-between" align="center">
             <Text verticalAlign="center">
               <RepeatClockIcon mr={3} mb={1} />
               終日
             </Text>
-            <Switch size="lg" colorScheme="green" />
+            <Switch
+              size="lg"
+              colorScheme="green"
+              onChange={(e) => setAllDay(e.target.checked)}
+            />
           </Flex>
           <Flex align="center" pl={5}>
             <Text width="30%">開始</Text>
             <Stack width="100%">
-              <Input type="date" />
-              <Input type="time" defaultValue="00:00" />
+              <Input
+                type="date"
+                value={startAtDate}
+                onChange={(e) => setStartAtDate(e.target.value)}
+              />
+              {!allDay && (
+                <Input
+                  type="time"
+                  value={startAtTime}
+                  onChange={(e) => setStartAtTime(e.target.value)}
+                />
+              )}
             </Stack>
           </Flex>
           <Flex align="center" pl={5}>
             <Text width="30%">終了</Text>
             <Stack width="100%">
-              <Input type="date" />
-              <Input type="time" defaultValue="00:00" />
+              <Input
+                type="date"
+                value={endAtDate}
+                onChange={(e) => setEndAtDate(e.target.value)}
+              />
+              {!allDay && (
+                <Input
+                  type="time"
+                  value={endAtTime}
+                  onChange={(e) => setEndAtTime(e.target.value)}
+                />
+              )}
             </Stack>
           </Flex>
-          <CalendarCheckBox />
-          <Button colorScheme="green">作成</Button>
+          <CalendarCheckBox
+            onChange={(e, calendar) => {
+              if (e.target.checked) {
+                setCalendars((prev) => [
+                  ...prev,
+                  { id: calendar.id, name: calendar.name },
+                ]);
+              } else {
+                setCalendars((prev) =>
+                  prev.filter((val) => val.id !== calendar.id)
+                );
+              }
+            }}
+          />
+          {calendars.length && (
+            <Box>
+              <Text verticalAlign="center">ラベル</Text>
+              {calendars.map((calendar) => (
+                <CalendarLabelSelect
+                  key={calendar.id}
+                  calendarId={calendar.id}
+                  calendarName={calendar.name}
+                  onChange={(labelId) => {
+                    setCalendars((prev) =>
+                      prev.map((val) => {
+                        if (val.id === calendar.id) val.labelId = labelId;
+                        return val;
+                      })
+                    );
+                  }}
+                />
+              ))}
+            </Box>
+          )}
+          <Button colorScheme="green" onClick={onClick}>
+            作成
+          </Button>
         </Stack>
       </Container>
     </RequiredLogin>
