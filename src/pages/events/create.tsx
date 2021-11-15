@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Link from "next/link";
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Box,
   Button,
   Container,
@@ -11,6 +17,7 @@ import {
   Stack,
   Switch,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import { ChevronLeftIcon, RepeatClockIcon } from "@chakra-ui/icons";
 import dayjs from "dayjs";
@@ -20,6 +27,7 @@ import { userSelectors } from "../../states/user";
 import { CalendarCheckBox } from "../../components/CalendarCheckBox";
 import { CalendarLabelSelect } from "../../components/CalendarLabelSelect";
 import { useEvents } from "../../hooks/useEvents";
+import { useDialog } from "../../hooks/useDialog";
 
 const now = dayjs();
 const nowAfterHour = now.add(1, "hour");
@@ -34,7 +42,10 @@ const EventCreate = () => {
   const [calendars, setCalendars] = useState<
     { id: string; name: string; labelId?: string }[]
   >([]);
+  const { isOpen, open, close } = useDialog();
+  const cancelRef = useRef(null);
 
+  const toast = useToast();
   const { data } = userSelectors.useUser();
   const { add } = useEvents();
 
@@ -48,6 +59,15 @@ const EventCreate = () => {
       endAtDate,
       endAtTime,
       calendars,
+      onAddEvent: open,
+      onAddEventError: () =>
+        toast({
+          title: "予定の作成に失敗しました",
+          description: "フォームを確認してください",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        }),
     });
   };
 
@@ -161,6 +181,31 @@ const EventCreate = () => {
           </Button>
         </Stack>
       </Container>
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={close}
+        isCentered
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent mx={3}>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              予定を作成しました。
+            </AlertDialogHeader>
+
+            <AlertDialogBody>予定の作成を続けますか？</AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Link href="/" passHref>
+                <Button>トップに戻る</Button>
+              </Link>
+              <Button colorScheme="green" onClick={close} ml={3}>
+                続ける
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </RequiredLogin>
   );
 };
