@@ -12,6 +12,8 @@ type AddArgs = {
   endAtDate: string;
   endAtTime: string;
   calendars: { id: string; name: string; labelId?: string }[];
+  onAddEvent?: () => void;
+  onAddEventError?: () => void;
 };
 
 export const useEvents = () => {
@@ -33,6 +35,8 @@ export const useEvents = () => {
     endAtDate,
     endAtTime,
     calendars,
+    onAddEvent,
+    onAddEventError,
   }: AddArgs) => {
     if (!client) return;
     const startAt = allDay
@@ -42,19 +46,26 @@ export const useEvents = () => {
       ? dayjs(`${endAtDate} 09:00:00`).toISOString()
       : dayjs(`${endAtDate} ${endAtTime}`).toISOString();
     for (const calendar of calendars) {
-      await client.createEvent({
-        calendarId: calendar.id,
-        title,
-        category: "schedule",
-        allDay,
-        startAt,
-        endAt,
-        label: {
-          id: calendar.labelId || "",
-          type: "label",
-        },
-        attendees: userIds.map((userId) => ({ id: userId, type: "user" })),
-      });
+      await client
+        .createEvent({
+          calendarId: calendar.id,
+          title,
+          category: "schedule",
+          allDay,
+          startAt,
+          endAt,
+          label: {
+            id: calendar.labelId || "",
+            type: "label",
+          },
+          attendees: userIds.map((userId) => ({ id: userId, type: "user" })),
+        })
+        .then(() => {
+          onAddEvent && onAddEvent();
+        })
+        .catch(() => {
+          onAddEventError && onAddEventError();
+        });
     }
   };
 
