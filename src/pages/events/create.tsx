@@ -42,12 +42,22 @@ const EventCreate = () => {
   const [calendars, setCalendars] = useState<
     { id: string; name: string; labelId?: string }[]
   >([]);
+
   const { isOpen, open, close } = useDialog();
   const cancelRef = useRef(null);
-
   const toast = useToast();
   const { data } = userSelectors.useUser();
-  const { add } = useAddEvent();
+  const { add } = useAddEvent({
+    onAddEvent: open,
+    onAddEventError: () =>
+      toast({
+        title: "予定の作成に失敗しました",
+        description: "フォームを確認してください",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      }),
+  });
 
   const onClick = async () => {
     await add({
@@ -59,15 +69,6 @@ const EventCreate = () => {
       endAtDate,
       endAtTime,
       calendars,
-      onAddEvent: open,
-      onAddEventError: () =>
-        toast({
-          title: "予定の作成に失敗しました",
-          description: "フォームを確認してください",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        }),
     });
   };
 

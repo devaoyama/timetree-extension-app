@@ -3,6 +3,11 @@ import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { accessTokenSelectors } from "../../states/accessToken";
 
+type Args = {
+  onAddEvent?: () => void;
+  onAddEventError?: () => void;
+};
+
 type AddArgs = {
   userIds: string[];
   title: string;
@@ -12,11 +17,9 @@ type AddArgs = {
   endAtDate: string;
   endAtTime: string;
   calendars: { id: string; name: string; labelId?: string }[];
-  onAddEvent?: () => void;
-  onAddEventError?: () => void;
 };
 
-export const useAddEvent = () => {
+export const useAddEvent = ({ onAddEvent, onAddEventError }: Args) => {
   const [client, setClient] = useState<OAuthClient | undefined>();
   const accessToken = accessTokenSelectors.useAccessToken();
 
@@ -35,8 +38,6 @@ export const useAddEvent = () => {
     endAtDate,
     endAtTime,
     calendars,
-    onAddEvent,
-    onAddEventError,
   }: AddArgs) => {
     if (!client) return;
     const startAt = allDay
