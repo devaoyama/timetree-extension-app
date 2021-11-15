@@ -26,8 +26,8 @@ import { RequiredLogin } from "../../components/RequiredLogin";
 import { userSelectors } from "../../states/user";
 import { CalendarCheckBox } from "../../components/CalendarCheckBox";
 import { CalendarLabelSelect } from "../../components/CalendarLabelSelect";
-import { useEvents } from "../../hooks/useEvents";
-import { useDialog } from "../../hooks/useDialog";
+import { useAddEvent } from "../../hooks/events/useAddEvent";
+import { useDialog } from "../../hooks/common/useDialog";
 
 const now = dayjs();
 const nowAfterHour = now.add(1, "hour");
@@ -47,7 +47,7 @@ const EventCreate = () => {
 
   const toast = useToast();
   const { data } = userSelectors.useUser();
-  const { add } = useEvents();
+  const { add } = useAddEvent();
 
   const onClick = async () => {
     await add({

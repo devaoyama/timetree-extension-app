@@ -1,7 +1,7 @@
 import { OAuthClient } from "@timetreeapp/web-api";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { accessTokenSelectors } from "../states/accessToken";
+import { accessTokenSelectors } from "../../states/accessToken";
 
 type AddArgs = {
   userIds: string[];
@@ -16,7 +16,7 @@ type AddArgs = {
   onAddEventError?: () => void;
 };
 
-export const useEvents = () => {
+export const useAddEvent = () => {
   const [client, setClient] = useState<OAuthClient | undefined>();
   const accessToken = accessTokenSelectors.useAccessToken();
 
