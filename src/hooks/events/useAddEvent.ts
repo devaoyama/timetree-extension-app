@@ -1,7 +1,5 @@
-import { OAuthClient } from "@timetreeapp/web-api";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
-import { accessTokenSelectors } from "../../states/accessToken";
+import { timeTreeSelectors } from "../../states/timetreeClient";
 
 type Args = {
   onAddEvent?: () => void;
@@ -20,14 +18,7 @@ type AddArgs = {
 };
 
 export const useAddEvent = ({ onAddEvent, onAddEventError }: Args) => {
-  const [client, setClient] = useState<OAuthClient | undefined>();
-  const accessToken = accessTokenSelectors.useAccessToken();
-
-  useEffect(() => {
-    if (!accessToken) return;
-    const client = new OAuthClient(accessToken);
-    setClient(client);
-  }, [accessToken]);
+  const timetree = timeTreeSelectors.useTimeTree();
 
   const add = async ({
     userIds,
@@ -39,7 +30,7 @@ export const useAddEvent = ({ onAddEvent, onAddEventError }: Args) => {
     endAtTime,
     calendars,
   }: AddArgs) => {
-    if (!client) return;
+    if (!timetree) return;
     const startAt = allDay
       ? dayjs(`${startAtDate} 09:00:00`).toISOString()
       : dayjs(`${startAtDate} ${startAtTime}`).toISOString();
@@ -47,7 +38,7 @@ export const useAddEvent = ({ onAddEvent, onAddEventError }: Args) => {
       ? dayjs(`${endAtDate} 09:00:00`).toISOString()
       : dayjs(`${endAtDate} ${endAtTime}`).toISOString();
     for (const calendar of calendars) {
-      await client
+      await timetree
         .createEvent({
           calendarId: calendar.id,
           title,

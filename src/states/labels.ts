@@ -1,17 +1,16 @@
-import { OAuthClient, Label } from "@timetreeapp/web-api";
+import { Label } from "@timetreeapp/web-api";
 import { selectorFamily, useRecoilValueLoadable } from "recoil";
 import { RecoilSelectorKeys } from "./keys";
-import { accessTokenState } from "./accessToken";
+import { timetreeClientState } from "./timetreeClient";
 
 const labelsQuery = selectorFamily<readonly Label[] | undefined, string>({
   key: RecoilSelectorKeys.LABELS_QUERY,
   get:
     (calendarId) =>
     async ({ get }) => {
-      const accessToken = get(accessTokenState);
-      if (!accessToken) return;
-      const client = new OAuthClient(accessToken);
-      return await client.getLabels(calendarId);
+      const timetree = get(timetreeClientState);
+      if (!timetree) return;
+      return await timetree.getLabels(calendarId);
     },
 });
 

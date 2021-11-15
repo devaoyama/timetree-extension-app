@@ -1,15 +1,14 @@
-import { OAuthClient, Calendar } from "@timetreeapp/web-api";
+import { Calendar } from "@timetreeapp/web-api";
 import { selector, useRecoilValueLoadable } from "recoil";
 import { RecoilSelectorKeys } from "./keys";
-import { accessTokenState } from "./accessToken";
+import { timetreeClientState } from "./timetreeClient";
 
 const calendarsQuery = selector<readonly Calendar[] | undefined>({
   key: RecoilSelectorKeys.CALENDARS_QUERY,
   get: async ({ get }) => {
-    const accessToken = get(accessTokenState);
-    if (!accessToken) return;
-    const client = new OAuthClient(accessToken);
-    return await client.getCalendars();
+    const timetree = get(timetreeClientState);
+    if (!timetree) return;
+    return await timetree.getCalendars();
   },
 });
 
