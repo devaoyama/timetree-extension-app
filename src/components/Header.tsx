@@ -14,7 +14,7 @@ export const Header: React.FC<Props> = ({ name, imageUrl }) => {
       align="center"
       justify="space-between"
       wrap="wrap"
-      padding={4}
+      padding={3}
       bg="green.400"
       color="white"
       position="fixed"

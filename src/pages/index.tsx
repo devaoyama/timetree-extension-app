@@ -13,7 +13,7 @@ const Home: NextPage = () => {
   return (
     <RequiredLogin>
       <Header name={data?.name} imageUrl={data?.imageUrl} />
-      <Box h="10vh" />
+      <Box h="9vh" />
       <Container mt={5}>
         <Link href="/events/create" passHref>
           <Button

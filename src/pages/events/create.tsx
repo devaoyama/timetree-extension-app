@@ -56,6 +56,7 @@ const EventCreate = () => {
         status: "error",
         duration: 5000,
         isClosable: true,
+        position: "top",
       }),
   });
 
@@ -75,7 +76,7 @@ const EventCreate = () => {
   return (
     <RequiredLogin>
       <Header name={data?.name} imageUrl={data?.imageUrl} />
-      <Box h="10vh" />
+      <Box h="9vh" />
       <Flex align="center" mt={4} mb={6}>
         <Link href="/" passHref>
           <IconButton
@@ -90,7 +91,7 @@ const EventCreate = () => {
           予定を作成
         </Heading>
       </Flex>
-      <Container>
+      <Container mb={5}>
         <Stack spacing={7}>
           <Input
             variant="flushed"

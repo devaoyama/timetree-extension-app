@@ -16,7 +16,7 @@ export const CalendarLabelSelect: React.FC<Props> = ({
   const { data } = labelSelectors.useLabels(calendarId);
 
   return (
-    <Flex align="center" pl={3}>
+    <Flex align="center" pl={3} mb={2}>
       <Text width="30%">{calendarName}</Text>
       <Select
         color={color}

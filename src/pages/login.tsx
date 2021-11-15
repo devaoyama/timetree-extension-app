@@ -17,7 +17,7 @@ const Login: NextPage = () => {
     <RequiredNotLogin>
       <Flex
         flexDirection="column"
-        width="100wh"
+        width="100ww"
         height="100vh"
         backgroundColor="gray.200"
         justifyContent="center"
@@ -30,13 +30,13 @@ const Login: NextPage = () => {
           alignItems="center"
           width="full"
         >
-          <Heading color="teal.400">Welcome</Heading>
+          <Heading color="green.400">Welcome</Heading>
           <Box minW={{ base: "90%", md: "468px" }}>
             <Button
               borderRadius={0}
               type="submit"
               variant="solid"
-              colorScheme="teal"
+              colorScheme="green"
               width="full"
               onClick={onClickButton}
             >
