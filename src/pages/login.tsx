@@ -1,6 +1,7 @@
 import React from "react";
-import { Box, Button, Flex, Heading, Stack } from "@chakra-ui/react";
 import type { NextPage } from "next";
+import Link from "next/link";
+import { Box, Button, Flex, Heading, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { RequiredNotLogin } from "../components/RequiredNotLogin";
 
@@ -31,10 +32,9 @@ const Login: NextPage = () => {
           width="full"
         >
           <Heading color="green.400">Welcome</Heading>
-          <Box minW={{ base: "90%", md: "468px" }}>
+          <Stack spacing={3} minW={{ base: "90%", md: "468px" }}>
             <Button
               borderRadius={0}
-              type="submit"
               variant="solid"
               colorScheme="green"
               width="full"
@@ -42,7 +42,17 @@ const Login: NextPage = () => {
             >
               ログイン
             </Button>
-          </Box>
+            <Link href="/token_login" passHref>
+              <Button
+                borderRadius={0}
+                variant="outline"
+                colorScheme="gray.500"
+                width="full"
+              >
+                トークンでログイン
+              </Button>
+            </Link>
+          </Stack>
         </Stack>
         <Box>TimeTreeにログインします</Box>
       </Flex>
