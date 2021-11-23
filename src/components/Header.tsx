@@ -1,6 +1,16 @@
-import React from "react";
+import React, { useCallback } from "react";
 import Link from "next/link";
-import { Avatar, Box, Flex, Heading } from "@chakra-ui/react";
+import { accessTokenActions } from "../states/accessToken";
+import {
+  Avatar,
+  Box,
+  Flex,
+  Heading,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+} from "@chakra-ui/react";
 
 type Props = {
   name?: string;
@@ -8,6 +18,12 @@ type Props = {
 };
 
 export const Header: React.FC<Props> = ({ name, imageUrl }) => {
+  const setAccessToken = accessTokenActions.useSetAccessToken();
+
+  const onClickLogout = useCallback(() => {
+    setAccessToken(undefined);
+  }, [setAccessToken]);
+
   return (
     <Flex
       as="nav"
@@ -19,6 +35,7 @@ export const Header: React.FC<Props> = ({ name, imageUrl }) => {
       color="white"
       position="fixed"
       width="100%"
+      zIndex="dropdown"
     >
       <Flex align="center" mr={5}>
         <Link href="/" passHref>
@@ -28,9 +45,15 @@ export const Header: React.FC<Props> = ({ name, imageUrl }) => {
         </Link>
       </Flex>
 
-      <Box display={{ base: "block", md: "none" }}>
-        <Avatar name={name} src={imageUrl} />
-      </Box>
+      <Menu>
+        <MenuButton as={Box}>
+          <Avatar name={name} src={imageUrl} />
+        </MenuButton>
+        <MenuList>
+          <MenuItem color="black">トークンを表示</MenuItem>
+          <MenuItem color="black" onClick={onClickLogout}>ログアウト</MenuItem>
+        </MenuList>
+      </Menu>
     </Flex>
   );
 };
