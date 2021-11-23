@@ -34,7 +34,7 @@ export const accessTokenState = atom<AccessTokenState>({
 
 type AccessTokenActions = {
   useRequestAccessToken: () => (code: string) => void;
-  useSetAccessToken: () => (token: string) => void;
+  useSetAccessToken: () => (token: string | undefined) => void;
 };
 
 export const accessTokenActions: AccessTokenActions = {
