@@ -1,15 +1,29 @@
 import React, { useCallback } from "react";
 import Link from "next/link";
-import { accessTokenActions } from "../states/accessToken";
+import {
+  accessTokenActions,
+  accessTokenSelectors,
+} from "../states/accessToken";
 import {
   Avatar,
   Box,
+  Button,
   Flex,
   Heading,
+  Input,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  useClipboard,
+  useDisclosure,
 } from "@chakra-ui/react";
 
 type Props = {
@@ -18,7 +32,10 @@ type Props = {
 };
 
 export const Header: React.FC<Props> = ({ name, imageUrl }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const accessToken = accessTokenSelectors.useAccessToken();
   const setAccessToken = accessTokenActions.useSetAccessToken();
+  const { hasCopied, onCopy } = useClipboard(accessToken || "");
 
   const onClickLogout = useCallback(() => {
     setAccessToken(undefined);
@@ -50,10 +67,29 @@ export const Header: React.FC<Props> = ({ name, imageUrl }) => {
           <Avatar name={name} src={imageUrl} />
         </MenuButton>
         <MenuList>
-          <MenuItem color="black">トークンを表示</MenuItem>
-          <MenuItem color="black" onClick={onClickLogout}>ログアウト</MenuItem>
+          <MenuItem color="black" onClick={onOpen}>
+            トークンを表示
+          </MenuItem>
+          <MenuItem color="black" onClick={onClickLogout}>
+            ログアウト
+          </MenuItem>
         </MenuList>
       </Menu>
+      <Modal size="xs" isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>アクセストークン</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={8}>
+            <Stack spacing={2}>
+              <Input value={accessToken || ""} isReadOnly />
+              <Button colorScheme="green" onClick={onCopy} ml={2}>
+                {hasCopied ? "コピーしました" : "コピーする"}
+              </Button>
+            </Stack>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Flex>
   );
 };
